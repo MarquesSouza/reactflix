@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Home from './pages/Home';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   BrowserRouter
 } from 'react-router-dom';
 import CadastroVideo from './pages/cadastro/Video'
