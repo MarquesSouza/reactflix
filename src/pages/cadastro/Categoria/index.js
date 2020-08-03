@@ -3,58 +3,30 @@ import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
 import {Link} from 'react-router-dom';
 import Button from "../../../components/Button";
-
+import useForm from '../../../hooks/useForm';
 function CadastroCategoria(){
   const valoresIniciais ={
-    nome:'',
+    titulo:'',
     descricao:'',
     cor:'#000',
   }  
+  const {handleChange,values, clearForm}= useForm(valoresIniciais)
   const [categorias,setCategorias] =useState([]);
-  const [values,setValues]=useState(valoresIniciais);
+  
+  useEffect(()=>{
+    const URL = 'http://localhost:8080/categorias';
 
-  function setValue(chave,valor){
-    setValues({
-      ...values,
-      [chave]:valor,
+    fetch(URL).then(async (req)=>{
+      const respota = await req.json();
+      setCategorias([
+        ...respota,
+      ]);
     })
-  }
-  function handleChange(inputHanle){
-    setValue(
-    inputHanle.target.getAttribute('name'),
-    inputHanle.target.value
-    )}
-    useEffect(()=>{
-      const URL = 'http://localhost:8080/categorias';
-
-      fetch(URL).then(async (req)=>{
-        const respota = await req.json();
-        setCategorias([
-          ...respota,
-        ]);
-      })
-    /*  setTimeout(()=>{
-        setCategorias([
-          ...categorias,
-          {
-            "id":1,
-            "nome": "Front End",
-            "descricao":"Uma Categoria",
-            "cor":"#cbd1ff"
-            },
-            {
-                "id":2,
-                "nome": "Back End",
-                "descricao":"Uma Categoria",
-                "cor":"#cbd1ff"
-                }
-          ])
-      },4*1000) */
-    },[])
+  },[])
 
   return (
       <PageDefault>
-         <h1>Cadastro de Categoria {values.nome}</h1>
+         <h1>Cadastro de Categoria {values.titulo}</h1>
 
          <form onSubmit={function handleSubmit(subitHandle) {
           subitHandle.preventDefault();
@@ -62,13 +34,13 @@ function CadastroCategoria(){
             ...categorias,
             values
           ]);
-             setValues(valoresIniciais)
+             clearForm()
            }}> 
            <FormField 
-              label="Nome da Categoria"
-              name="nome"
+              label="Titulo da Categoria"
+              name="titulo"
               type="text"
-              value={values.nome}
+              value={values.titulo}
               onChange={handleChange}
            />
            <FormField 
@@ -96,8 +68,8 @@ function CadastroCategoria(){
       <ul>
         {categorias.map((categoria, indice) => {
           return (
-            <li key={`${categoria.nome}${indice}`}>
-              {categoria.nome}
+            <li key={`${categoria.titulo}${indice}`}>
+              {categoria.titulo}
             </li>
           )
         })}
